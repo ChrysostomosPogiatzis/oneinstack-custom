@@ -257,102 +257,20 @@ if [ ${ARG_NUM} == 0 ]; then
         while :; do echo
           echo 'Please select Nginx server:'
           echo -e "\t${CMSG}1${CEND}. Install Nginx"
-          echo -e "\t${CMSG}2${CEND}. Install Tengine"
-          echo -e "\t${CMSG}3${CEND}. Install OpenResty"
-          echo -e "\t${CMSG}4${CEND}. Do not install"
+
           read -e -p "Please input a number:(Default 1 press Enter) " nginx_option
           nginx_option=${nginx_option:-1}
           if [[ ! ${nginx_option} =~ ^[1-4]$ ]]; then
             echo "${CWARNING}input error! Please only input number 1~4${CEND}"
           else
             [ "${nginx_option}" != '4' -a -e "${nginx_install_dir}/sbin/nginx" ] && { echo "${CWARNING}Nginx already installed! ${CEND}"; unset nginx_option; }
-            [ "${nginx_option}" != '4' -a -e "${tengine_install_dir}/sbin/nginx" ] && { echo "${CWARNING}Tengine already installed! ${CEND}"; unset nginx_option; }
-            [ "${nginx_option}" != '4' -a -e "${openresty_install_dir}/nginx/sbin/nginx" ] && { echo "${CWARNING}OpenResty already installed! ${CEND}"; unset nginx_option; }
+
             break
           fi
         done
 
-        # Apache
-        while :; do echo
-          read -e -p "Do you want to install Apache? [y/n]: " apache_flag
-          if [[ ! ${apache_flag} =~ ^[y,n]$ ]]; then
-            echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
-          else
-            [ "${apache_flag}" == 'y' -a -e "${apache_install_dir}/bin/httpd" ] && { echo "${CWARNING}Aapche already installed! ${CEND}"; unset apache_flag; }
-            break
-          fi
-        done
-        # Apache2.4 mode and Apache2.4 MPM
-        if [ "${apache_flag}" == 'y' -o -e "${apache_install_dir}/bin/httpd" ]; then
-          while :; do echo
-            echo 'Please select Apache mode:'
-            echo -e "\t${CMSG}1${CEND}. php-fpm"
-            echo -e "\t${CMSG}2${CEND}. mod_php"
-            read -e -p "Please input a number:(Default 1 press Enter) " apache_mode_option
-            apache_mode_option=${apache_mode_option:-1}
-            if [[ ! ${apache_mode_option} =~ ^[1-2]$ ]]; then
-              echo "${CWARNING}input error! Please only input number 1~2${CEND}"
-            else
-              break
-            fi
-          done
-          while :; do echo
-            echo 'Please select Apache MPM:'
-            echo -e "\t${CMSG}1${CEND}. event"
-            echo -e "\t${CMSG}2${CEND}. prefork"
-            echo -e "\t${CMSG}3${CEND}. worker"
-            read -e -p "Please input a number:(Default 1 press Enter) " apache_mpm_option
-            apache_mpm_option=${apache_mpm_option:-1}
-            if [[ ! ${apache_mpm_option} =~ ^[1-3]$ ]]; then
-              echo "${CWARNING}input error! Please only input number 1~3${CEND}"
-            else
-              break
-            fi
-          done
-        fi
-        # Tomcat
-        while :; do echo
-          echo 'Please select tomcat server:'
-          echo -e "\t${CMSG}1${CEND}. Install Tomcat-10"
-          echo -e "\t${CMSG}2${CEND}. Install Tomcat-9"
-          echo -e "\t${CMSG}3${CEND}. Install Tomcat-8"
-          echo -e "\t${CMSG}4${CEND}. Install Tomcat-7"
-          echo -e "\t${CMSG}5${CEND}. Do not install"
-          read -e -p "Please input a number:(Default 5 press Enter) " tomcat_option
-          tomcat_option=${tomcat_option:-5}
-          if [[ ! ${tomcat_option} =~ ^[1-5]$ ]]; then
-            echo "${CWARNING}input error! Please only input number 1~5${CEND}"
-          else
-            [ "${tomcat_option}" != '5' -a -e "$tomcat_install_dir/conf/server.xml" ] && { echo "${CWARNING}Tomcat already installed! ${CEND}" ; unset tomcat_option; }
-            if [[ "${tomcat_option}" =~ ^[1-3]$ ]]; then
-              while :; do echo
-                echo 'Please select JDK version:'
-                echo -e "\t${CMSG}1${CEND}. Install openjdk-8-jdk"
-                echo -e "\t${CMSG}2${CEND}. Install openjdk-11-jdk"
-                read -e -p "Please input a number:(Default 1 press Enter) " jdk_option
-                jdk_option=${jdk_option:-1}
-                if [[ ! ${jdk_option} =~ ^[1-2]$ ]]; then
-                  echo "${CWARNING}input error! Please only input number 1~3${CEND}"
-                else
-                  break
-                fi
-              done
-            elif [ "${tomcat_option}" == '4' ]; then
-              while :; do echo
-                echo 'Please select JDK version:'
-                echo -e "\t${CMSG}1${CEND}. Install openjdk-8-jdk"
-                read -e -p "Please input a number:(Default 1 press Enter) " jdk_option
-                jdk_option=${jdk_option:-1}
-                if [[ ! ${jdk_option} =~ ^1$ ]]; then
-                  echo "${CWARNING}input error! Please only input number 1${CEND}"
-                else
-                  break
-                fi
-              done
-            fi
-            break
-          fi
-        done
+
+
       fi
       break
     fi
@@ -367,21 +285,10 @@ if [ ${ARG_NUM} == 0 ]; then
       if [ "${db_flag}" == 'y' ]; then
         while :; do echo
           echo 'Please select a version of the Database:'
-          echo -e "\t${CMSG} 1${CEND}. Install MySQL-8.0"
-          echo -e "\t${CMSG} 2${CEND}. Install MySQL-5.7"
-          echo -e "\t${CMSG} 3${CEND}. Install MySQL-5.6"
-          echo -e "\t${CMSG} 4${CEND}. Install MySQL-5.5"
-          echo -e "\t${CMSG} 5${CEND}. Install MariaDB-10.6"
-          echo -e "\t${CMSG} 6${CEND}. Install MariaDB-10.5"
-          echo -e "\t${CMSG} 7${CEND}. Install MariaDB-10.4"
-          echo -e "\t${CMSG} 8${CEND}. Install MariaDB-5.5"
-          echo -e "\t${CMSG} 9${CEND}. Install Percona-8.0"
-          echo -e "\t${CMSG}10${CEND}. Install Percona-5.7"
-          echo -e "\t${CMSG}11${CEND}. Install Percona-5.6"
-          echo -e "\t${CMSG}12${CEND}. Install Percona-5.5"
-          echo -e "\t${CMSG}13${CEND}. Install PostgreSQL"
-          echo -e "\t${CMSG}14${CEND}. Install MongoDB"
-          read -e -p "Please input a number:(Default 2 press Enter) " db_option
+
+          echo -e "\t${CMSG} 1${CEND}. Install MySQL-5.7"
+
+          read -e -p "Please input a number:(Default 1 press Enter) " db_option
           db_option=${db_option:-2}
           if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
             if [ "${db_option}" == '13' ]; then
@@ -451,21 +358,15 @@ if [ ${ARG_NUM} == 0 ]; then
         [ -e "${php_install_dir}/bin/phpize" ] && { echo "${CWARNING}PHP already installed! ${CEND}"; unset php_option; break; }
         while :; do echo
           echo 'Please select a version of the PHP:'
-          echo -e "\t${CMSG} 1${CEND}. Install php-5.3"
-          echo -e "\t${CMSG} 2${CEND}. Install php-5.4"
-          echo -e "\t${CMSG} 3${CEND}. Install php-5.5"
-          echo -e "\t${CMSG} 4${CEND}. Install php-5.6"
-          echo -e "\t${CMSG} 5${CEND}. Install php-7.0"
-          echo -e "\t${CMSG} 6${CEND}. Install php-7.1"
-          echo -e "\t${CMSG} 7${CEND}. Install php-7.2"
-          echo -e "\t${CMSG} 8${CEND}. Install php-7.3"
-          echo -e "\t${CMSG} 9${CEND}. Install php-7.4"
-          echo -e "\t${CMSG}10${CEND}. Install php-8.0"
-          echo -e "\t${CMSG}11${CEND}. Install php-8.1"
-          read -e -p "Please input a number:(Default 7 press Enter) " php_option
+
+          echo -e "\t${CMSG} 1${CEND}. Install php-7.3"
+          echo -e "\t${CMSG} 2${CEND}. Install php-7.4"
+          echo -e "\t${CMSG}3${CEND}. Install php-8.0"
+          echo -e "\t${CMSG}4${CEND}. Install php-8.1"
+          read -e -p "Please input a number:(Default 1 press Enter) " php_option
           php_option=${php_option:-7}
           if [[ ! ${php_option} =~ ^[1-9]$|^1[0-1]$ ]]; then
-            echo "${CWARNING}input error! Please only input number 1~11${CEND}"
+            echo "${CWARNING}input error! Please only input number 1~4${CEND}"
           else
             break
           fi
@@ -505,52 +406,7 @@ if [ ${ARG_NUM} == 0 ]; then
               fi
             done
           fi
-          if [ "${php_option}" == '2' -o "${PHP_main_ver}" == '5.4' ]; then
-            while :; do
-              echo 'Please select a opcode cache of the PHP:'
-              echo -e "\t${CMSG}1${CEND}. Install Zend OPcache"
-              echo -e "\t${CMSG}2${CEND}. Install APCU"
-              echo -e "\t${CMSG}3${CEND}. Install XCache"
-              echo -e "\t${CMSG}4${CEND}. Install eAccelerator-1.0-dev"
-              read -e -p "Please input a number:(Default 1 press Enter) " phpcache_option
-              phpcache_option=${phpcache_option:-1}
-              if [[ ! ${phpcache_option} =~ ^[1-4]$ ]]; then
-                echo "${CWARNING}input error! Please only input number 1~4${CEND}"
-              else
-                break
-              fi
-            done
-          fi
-          if [ "${php_option}" == '3' -o "${PHP_main_ver}" == '5.5' ]; then
-            while :; do
-              echo 'Please select a opcode cache of the PHP:'
-              echo -e "\t${CMSG}1${CEND}. Install Zend OPcache"
-              echo -e "\t${CMSG}2${CEND}. Install APCU"
-              echo -e "\t${CMSG}3${CEND}. Install XCache"
-              read -e -p "Please input a number:(Default 1 press Enter) " phpcache_option
-              phpcache_option=${phpcache_option:-1}
-              if [[ ! ${phpcache_option} =~ ^[1-3]$ ]]; then
-                echo "${CWARNING}input error! Please only input number 1~3${CEND}"
-              else
-                break
-              fi
-            done
-          fi
-          if [ "${php_option}" == '4' -o "${PHP_main_ver}" == '5.6' ]; then
-            while :; do
-              echo 'Please select a opcode cache of the PHP:'
-              echo -e "\t${CMSG}1${CEND}. Install Zend OPcache"
-              echo -e "\t${CMSG}2${CEND}. Install XCache"
-              echo -e "\t${CMSG}3${CEND}. Install APCU"
-              read -e -p "Please input a number:(Default 1 press Enter) " phpcache_option
-              phpcache_option=${phpcache_option:-1}
-              if [[ ! ${phpcache_option} =~ ^[1-3]$ ]]; then
-                echo "${CWARNING}input error! Please only input number 1~3${CEND}"
-              else
-                break
-              fi
-            done
-          fi
+
           if [[ ${php_option} =~ ^[5-9]$|^1[0-1]$ ]] || [[ "${PHP_main_ver}" =~ ^7.[0-4]$|^8.[0-1]$ ]]; then
             while :; do
               echo 'Please select a opcode cache of the PHP:'
