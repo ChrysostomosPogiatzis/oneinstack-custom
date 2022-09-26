@@ -30,6 +30,25 @@ Install_pecl_fileinfo() {
     fi
     popd > /dev/null
   fi
+  
+  
+  pushd php-${PHP_detail_ver}/ext/gmp > /dev/null
+    ${php_install_dir}/bin/phpize
+    ./configure --with-php-config=${php_install_dir}/bin/php-config
+    [[ "${php_option}" =~ ^1[0-1]$ ]] && sed -i 's@^CFLAGS = -g -O2@CFLAGS = -std=c99 -g -O2@' Makefile
+    make -j ${THREAD} && make install
+    popd > /dev/null
+
+     if [ -f "${phpExtensionDir}/gmp.so" ]; then
+      echo 'extension=fileinfo.so' > ${php_install_dir}/etc/php.d/gmp.ini
+      echo "${CSUCCESS}PHP gmp module installed successfully! ${CEND}"
+      rm -rf php-${PHP_detail_ver}
+    else
+      echo "${CFAILURE}PHP gmp module install failed, Please contact the author! ${CEND}" && lsb_release -a
+    fi
+  
+ 
+ 
 }
 
 Uninstall_pecl_fileinfo() {
