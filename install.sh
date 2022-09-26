@@ -384,54 +384,7 @@ if [ ${ARG_NUM} == 0 ]; then
 
   # PHP opcode cache and extensions
   if [[ ${php_option} =~ ^[1-9]$|^1[0-1]$ ]] || [ -e "${php_install_dir}/bin/phpize" ]; then
-    while :; do echo
-      read -e -p "Do you want to install opcode cache of the PHP? [y/n]: " phpcache_flag
-      if [[ ! ${phpcache_flag} =~ ^[y,n]$ ]]; then
-        echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
-      else
-        if [ "${phpcache_flag}" == 'y' ]; then
-          if [ "${php_option}" == '1' -o "${PHP_main_ver}" == '5.3' ]; then
-            while :; do
-              echo 'Please select a opcode cache of the PHP:'
-              echo -e "\t${CMSG}1${CEND}. Install Zend OPcache"
-              echo -e "\t${CMSG}2${CEND}. Install APCU"
-              echo -e "\t${CMSG}3${CEND}. Install XCache"
-              echo -e "\t${CMSG}4${CEND}. Install eAccelerator-0.9"
-              read -e -p "Please input a number:(Default 1 press Enter) " phpcache_option
-              phpcache_option=${phpcache_option:-1}
-              if [[ ! ${phpcache_option} =~ ^[1-4]$ ]]; then
-                echo "${CWARNING}input error! Please only input number 1~4${CEND}"
-              else
-                break
-              fi
-            done
-          fi
 
-          if [[ ${php_option} =~ ^[5-9]$|^1[0-1]$ ]] || [[ "${PHP_main_ver}" =~ ^7.[0-4]$|^8.[0-1]$ ]]; then
-            while :; do
-              echo 'Please select a opcode cache of the PHP:'
-              echo -e "\t${CMSG}1${CEND}. Install Zend OPcache"
-              echo -e "\t${CMSG}2${CEND}. Install APCU"
-              read -e -p "Please input a number:(Default 1 press Enter) " phpcache_option
-              phpcache_option=${phpcache_option:-1}
-              if [[ ! ${phpcache_option} =~ ^[1-2]$ ]]; then
-                echo "${CWARNING}input error! Please only input number 1~2${CEND}"
-              else
-                break
-              fi
-            done
-          fi
-        fi
-        break
-      fi
-    done
-    # set xcache passwd
-    if [ "${phpcache_option}" == '3' ]; then
-      while :; do
-        read -e -p "Please input xcache admin password: " xcachepwd
-        (( ${#xcachepwd} >= 5 )) && { xcachepwd_md5=$(echo -n "${xcachepwd}" | md5sum | awk '{print $1}') ; break ; } || echo "${CFAILURE}xcache admin password least 5 characters! ${CEND}"
-      done
-    fi
     # PHP extension
     while :; do
       echo
@@ -454,7 +407,7 @@ if [ ${ARG_NUM} == 0 ]; then
       echo -e "\t${CMSG}15${CEND}. Install swoole"
       echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
       read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
-      phpext_option=${phpext_option:-'4 11 12'}
+      phpext_option=${phpext_option:-'2 4 6 12 13'}
       [ "${phpext_option}" == '0' ] && break
       array_phpext=(${phpext_option})
       array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
@@ -488,27 +441,9 @@ if [ ${ARG_NUM} == 0 ]; then
     done
   fi
 
-  # check Nodejs
-  while :; do echo
-    read -e -p "Do you want to install Nodejs? [y/n]: " nodejs_flag
-    if [[ ! ${nodejs_flag} =~ ^[y,n]$ ]]; then
-      echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
-    else
-      [ "${nodejs_flag}" == 'y' -a -e "${nodejs_install_dir}/bin/node" ] && { echo "${CWARNING}Nodejs already installed! ${CEND}"; unset nodejs_flag; }
-      break
-    fi
-  done
 
-  # check Pureftpd
-  while :; do echo
-    read -e -p "Do you want to install Pure-FTPd? [y/n]: " pureftpd_flag
-    if [[ ! ${pureftpd_flag} =~ ^[y,n]$ ]]; then
-      echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
-    else
-      [ "${pureftpd_flag}" == 'y' -a -e "${pureftpd_install_dir}/sbin/pure-ftpwho" ] && { echo "${CWARNING}Pure-FTPd already installed! ${CEND}"; unset pureftpd_flag; }
-      break
-    fi
-  done
+
+
 
   # check phpMyAdmin
   if [[ ${php_option} =~ ^[1-9]$|^1[0-1]$ ]] || [ -e "${php_install_dir}/bin/phpize" ]; then
@@ -523,27 +458,7 @@ if [ ${ARG_NUM} == 0 ]; then
     done
   fi
 
-  # check redis
-  while :; do echo
-    read -e -p "Do you want to install redis-server? [y/n]: " redis_flag
-    if [[ ! ${redis_flag} =~ ^[y,n]$ ]]; then
-      echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
-    else
-      [ "${redis_flag}" == 'y' -a -e "${redis_install_dir}/bin/redis-server" ] && { echo "${CWARNING}redis-server already installed! ${CEND}"; unset redis_flag; }
-      break
-    fi
-  done
-
-  # check memcached
-  while :; do echo
-    read -e -p "Do you want to install memcached-server? [y/n]: " memcached_flag
-    if [[ ! ${memcached_flag} =~ ^[y,n]$ ]]; then
-      echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
-    else
-      [ "${memcached_flag}" == 'y' -a -e "${memcached_install_dir}/bin/memcached" ] && { echo "${CWARNING}memcached-server already installed! ${CEND}"; unset memcached_flag; }
-      break
-    fi
-  done
+ 
 fi
 
 if [[ ${nginx_option} =~ ^[1-3]$ ]] || [ "${apache_flag}" == 'y' ] || [[ ${tomcat_option} =~ ^[1-4]$ ]]; then
