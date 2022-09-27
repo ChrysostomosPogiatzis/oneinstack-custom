@@ -10,12 +10,75 @@
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 clear
-printf "
-#######################################################################
-#       OneinStack for CentOS/RedHat 7+ Debian 9+ and Ubuntu 16+      #
-#       For more information please visit https://oneinstack.com      #
-#######################################################################
+ERROR_CHAR="  ⌦  ERROR->"
+
+echo ""
+echo -e "
+███████╗████████╗███████╗██████╗  ██████╗ ██╗██████╗    ██╗  ██╗    ██████╗
+██╔════╝╚══██╔══╝██╔════╝██╔══██╗██╔═══██╗██║██╔══██╗   ██║  ██║   ██╔═████╗
+███████╗   ██║   █████╗  ██████╔╝██║   ██║██║██║  ██║   ███████║   ██║██╔██║
+╚════██║   ██║   ██╔══╝  ██╔══██╗██║   ██║██║██║  ██║   ╚════██║   ████╔╝██║
+███████║   ██║   ███████╗██║  ██║╚██████╔╝██║██████╔╝        ██║██╗╚██████╔╝██╗
+╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝╚═════╝         ╚═╝╚═╝ ╚═════╝ ╚═╝
+                                                                            "
+sleep 1
+echo "Steroid4.0 (BPC) masternode.Installation Script"
+sleep 1
+echo "This script will install & configure Nginx, Mysql and other required packages."
+sleep 1
+echo "It will configure a vhost in nginx, clone the Steroid4.0 (BPC) masternode  repo, and setup the database."
+echo "Brought to you by Beepxtra "
+echo ""
+echo ""
+# check RAM
+checkRAM() {
+    RAMTOTAL=$(free -m | awk '/^Mem:/{print $2}')
+    DISK_A=$(df $PWD | awk '/[0-9]%/{print $(NF-2)}')
+    CORETOTAL=$(grep 'cpu cores' /proc/cpuinfo | uniq)
+}
+checkRAM
+if [[  $RAMTOTAL -lt 1800 ]]; then
+    echo ""
+    read -p "WARNING: Detected < 2GB RAM.  Continue? (yes|no): " USER_RAM_CONTINUE
+    if ! [[ "$USER_RAM_CONTINUE" == "yes" ]]; then
+        echo -e "$ERROR_CHAR You did not type 'yes'. Halting setup.\n"
+        exitAsError
+
+
+    fi
+  else
+
+      echo -e "Hardware Requirements:
+
+2GB RAM
+1 CPU Core
+50GB DISK
+
 "
+
+
+
+
+echo -e "Ram Detected:${RAMTOTAL} mb "
+echo -e "Cores Detected:${CORETOTAL}  "
+echo -e "Disk Available:${DISK_A} mb "
+fi
+sleep 1
+# Prompt user for domain name
+
+echo  "Setup is starting  this will take some time depenting your system specs"
+  echo "Checking SSH port"
+
+if grep -Fxq "Port 2211" /etc/ssh/sshd_config
+then
+    echo "SSH Port is 2211"
+else
+  echo "Port 2211" >> /etc/ssh/sshd_config
+  echo "SSH Port has change to 2211"
+    # code if not found
+fi
+
+systemctl restart sshd
 # Check if user is root
 [ $(id -u) != "0" ] && { echo "${CFAILURE}Error: You must be root to run this script${CEND}"; exit 1; }
 
@@ -45,10 +108,9 @@ Show_Help() {
   echo "Usage: $0  command ...[parameters]....
   --help, -h                  Show this help message, More: https://oneinstack.com/auto
   --version, -v               Show version info
-  --nginx_option [1-3]        Install Nginx server version
-  --apache                    Install Apache
-  --apache_mode_option [1-2]  Apache2.4 mode, 1(default): php-fpm, 2: mod_php
-  --apache_mpm_option [1-3]   Apache2.4 MPM, 1(default): event, 2: prefork, 3: worker
+  --nginx_option [1]        Install Nginx server version
+
+
   --php_option [1-11]         Install PHP version
   --mphp_ver [53~81]          Install another PHP version (PATH: ${php_install_dir}\${mphp_ver})
   --mphp_addons               Only install another PHP addons
@@ -248,18 +310,19 @@ if [ ${ARG_NUM} == 0 ]; then
 
   # check Web server
   while :; do echo
-    read -e -p "Do you want to install Web server? [y/n]: " web_flag
+    #read -e -p "Do you want to install Web server? [y/n]: " web_flag
+    web_flag=y
     if [[ ! ${web_flag} =~ ^[y,n]$ ]]; then
       echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
     else
       if [ "${web_flag}" == 'y' ]; then
         # Nginx/Tegine/OpenResty
         while :; do echo
-          echo 'Please select Nginx server:'
-          echo -e "\t${CMSG}1${CEND}. Install Nginx"
+          #echo 'Please select Nginx server:'
+          #echo -e "\t${CMSG}1${CEND}. Install Nginx"
 
-          read -e -p "Please input a number:(Default 1 press Enter) " nginx_option
-          nginx_option=${nginx_option:-1}
+          #read -e -p "Please input a number:(Default 1 press Enter) " nginx_option
+          nginx_option=1
           if [[ ! ${nginx_option} =~ ^[1-4]$ ]]; then
             echo "${CWARNING}input error! Please only input number 1~4${CEND}"
           else
@@ -278,37 +341,28 @@ if [ ${ARG_NUM} == 0 ]; then
 
   # choice database
   while :; do echo
-    read -e -p "Do you want to install Database? [y/n]: " db_flag
+  #  read -e -p "Do you want to install Database? [y/n]: " db_flag
+    db_flag=y
     if [[ ! ${db_flag} =~ ^[y,n]$ ]]; then
       echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
     else
       if [ "${db_flag}" == 'y' ]; then
         while :; do echo
-          echo 'Please select a version of the Database:'
+      #    echo 'Please select a version of the Database:'
 
-          echo -e "\t${CMSG} 1${CEND}. Install MySQL-5.7"
+    #      echo -e "\t${CMSG} 1${CEND}. Install MySQL-5.7"
 
-          read -e -p "Please input a number:(Default 1 press Enter) " db_option
-          db_option=${db_option:-2}
+        #  read -e -p "Please input a number:(Default 1 press Enter) " db_option
+          db_option=2
           if [[ "${db_option}" =~ ^[1-9]$|^1[0-4]$ ]]; then
-            if [ "${db_option}" == '13' ]; then
-              [ -e "${pgsql_install_dir}/bin/psql" ] && { echo "${CWARNING}PostgreSQL already installed! ${CEND}"; unset db_option; break; }
-            elif [ "${db_option}" == '14' ]; then
-              [ -e "${mongo_install_dir}/bin/mongo" ] && { echo "${CWARNING}MongoDB already installed! ${CEND}"; unset db_option; break; }
-            else
+
               [ -d "${db_install_dir}/support-files" ] && { echo "${CWARNING}MySQL already installed! ${CEND}"; unset db_option; break; }
-            fi
+
             while :; do
-              if [ "${db_option}" == '13' ]; then
-                read -e -p "Please input the postgres password of PostgreSQL(default: ${dbpostgrespwd}): " dbpwd
-                dbpwd=${dbpwd:-${dbpostgrespwd}}
-              elif [ "${db_option}" == '14' ]; then
-                read -e -p "Please input the root password of MongoDB(default: ${dbmongopwd}): " dbpwd
-                dbpwd=${dbpwd:-${dbmongopwd}}
-              else
+
                 read -e -p "Please input the root password of MySQL(default: ${dbrootpwd}): " dbpwd
                 dbpwd=${dbpwd:-${dbrootpwd}}
-              fi
+
               [ -n "`echo ${dbpwd} | grep '[+|&]'`" ] && { echo "${CWARNING}input error,not contain a plus sign (+) and & ${CEND}"; continue; }
               if (( ${#dbpwd} >= 5 )); then
                 if [ "${db_option}" == '13' ]; then
@@ -350,21 +404,23 @@ if [ ${ARG_NUM} == 0 ]; then
 
   # choice php
   while :; do echo
-    read -e -p "Do you want to install PHP? [y/n]: " php_flag
+    #read -e -p "Do you want to install PHP? [y/n]: " php_flag
+    php_flag=y
     if [[ ! ${php_flag} =~ ^[y,n]$ ]]; then
       echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
     else
       if [ "${php_flag}" == 'y' ]; then
         [ -e "${php_install_dir}/bin/phpize" ] && { echo "${CWARNING}PHP already installed! ${CEND}"; unset php_option; break; }
         while :; do echo
-          echo 'Please select a version of the PHP:'
+        #  echo 'Please select a version of the PHP:'
 
-          echo -e "\t${CMSG} 1${CEND}. Install php-7.3"
-          echo -e "\t${CMSG} 2${CEND}. Install php-7.4"
-          echo -e "\t${CMSG}3${CEND}. Install php-8.0"
-          echo -e "\t${CMSG}4${CEND}. Install php-8.1"
-          read -e -p "Please input a number:(Default 1 press Enter) " php_option
-          php_option=${php_option:-7}
+          #echo -e "\t${CMSG} 1${CEND}. Install php-7.3"
+        #  echo -e "\t${CMSG} 2${CEND}. Install php-7.4"
+        #  echo -e "\t${CMSG}3${CEND}. Install php-8.0"
+        #  echo -e "\t${CMSG}4${CEND}. Install php-8.1"
+        #  read -e -p "Please input a number:(Default 1 press Enter) " php_option
+          php_option=8
+          php_option=${php_option:-8}
           if [[ ! ${php_option} =~ ^[1-9]$|^1[0-1]$ ]]; then
             echo "${CWARNING}input error! Please only input number 1~4${CEND}"
           else
@@ -387,27 +443,27 @@ if [ ${ARG_NUM} == 0 ]; then
 
     # PHP extension
     while :; do
-      echo
-      echo 'Please select PHP extensions:'
-      echo -e "\t${CMSG} 0${CEND}. Do not install"
-      echo -e "\t${CMSG} 1${CEND}. Install zendguardloader(PHP<=5.6)"
-      echo -e "\t${CMSG} 2${CEND}. Install ioncube"
-      echo -e "\t${CMSG} 3${CEND}. Install sourceguardian(PHP<=7.2)"
-      echo -e "\t${CMSG} 4${CEND}. Install imagick"
-      echo -e "\t${CMSG} 5${CEND}. Install gmagick"
-      echo -e "\t${CMSG} 6${CEND}. Install fileinfo"
-      echo -e "\t${CMSG} 7${CEND}. Install imap"
-      echo -e "\t${CMSG} 8${CEND}. Install ldap"
-      echo -e "\t${CMSG} 9${CEND}. Install phalcon(PHP>=5.5)"
-      echo -e "\t${CMSG}10${CEND}. Install yaf(PHP>=7.0)"
-      echo -e "\t${CMSG}11${CEND}. Install redis"
-      echo -e "\t${CMSG}12${CEND}. Install memcached"
-      echo -e "\t${CMSG}13${CEND}. Install memcache"
-      echo -e "\t${CMSG}14${CEND}. Install mongodb"
-      echo -e "\t${CMSG}15${CEND}. Install swoole"
-      echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
-      read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
-      phpext_option=${phpext_option:-'2 4 6 12 13'}
+  #    echo
+    #  echo 'Please select PHP extensions:'
+  #    echo -e "\t${CMSG} 0${CEND}. Do not install"
+  #    echo -e "\t${CMSG} 1${CEND}. Install zendguardloader(PHP<=5.6)"
+  #    echo -e "\t${CMSG} 2${CEND}. Install ioncube"
+  #    echo -e "\t${CMSG} 3${CEND}. Install sourceguardian(PHP<=7.2)"
+  #    echo -e "\t${CMSG} 4${CEND}. Install imagick"
+  #    echo -e "\t${CMSG} 5${CEND}. Install gmagick"
+  #    echo -e "\t${CMSG} 6${CEND}. Install fileinfo"
+  #    echo -e "\t${CMSG} 7${CEND}. Install imap"
+  #    echo -e "\t${CMSG} 8${CEND}. Install ldap"
+  #    echo -e "\t${CMSG} 9${CEND}. Install phalcon(PHP>=5.5)"
+    #  echo -e "\t${CMSG}10${CEND}. Install yaf(PHP>=7.0)"
+  #    echo -e "\t${CMSG}11${CEND}. Install redis"
+  #    echo -e "\t${CMSG}12${CEND}. Install memcached"
+    #  echo -e "\t${CMSG}13${CEND}. Install memcache"
+  #    echo -e "\t${CMSG}14${CEND}. Install mongodb"
+  #    echo -e "\t${CMSG}15${CEND}. Install swoole"
+  #    echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
+    #  read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
+      phpext_option='2 4 6 12 13'
       [ "${phpext_option}" == '0' ] && break
       array_phpext=(${phpext_option})
       array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
@@ -448,7 +504,8 @@ if [ ${ARG_NUM} == 0 ]; then
   # check phpMyAdmin
   if [[ ${php_option} =~ ^[1-9]$|^1[0-1]$ ]] || [ -e "${php_install_dir}/bin/phpize" ]; then
     while :; do echo
-      read -e -p "Do you want to install phpMyAdmin? [y/n]: " phpmyadmin_flag
+    #  read -e -p "Do you want to install phpMyAdmin? [y/n]: " phpmyadmin_flag
+      phpmyadmin_flag=y
       if [[ ! ${phpmyadmin_flag} =~ ^[y,n]$ ]]; then
         echo "${CWARNING}input error! Please only input 'y' or 'n'${CEND}"
       else
@@ -458,7 +515,7 @@ if [ ${ARG_NUM} == 0 ]; then
     done
   fi
 
- 
+
 fi
 
 if [[ ${nginx_option} =~ ^[1-3]$ ]] || [ "${apache_flag}" == 'y' ] || [[ ${tomcat_option} =~ ^[1-4]$ ]]; then
@@ -933,6 +990,261 @@ if [[ ${nginx_option} =~ ^[1-3]$ ]] || [ "${apache_flag}" == 'y' ] || [[ ${tomca
 fi
 if [ ${ARG_NUM} == 0 ]; then
   while :; do echo
+  echo "Create Steroid Database"
+  DB="S4QL"
+  USER="steroid"
+  PASS="steroid"
+  mysql -u root -p${dbpass} -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
+  mysql -u root -p${dbpass} -e "CREATE USER $USER@'%' IDENTIFIED BY '$PASS'";
+  mysql -u root -p${dbpass} -e "GRANT SELECT ON $DB.* TO '$USER'@'%'";
+  #CREATE USER 'steroid1'@'%' IDENTIFIED WITH mysql_native_password AS '***';GRANT SELECT ON *.* TO 'steroid1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+  echo "QUESTION: Enter your custom domain name (peer2.steroid.io): "
+  read vhosturl
+  echo "Generate vhost ."
+  sleep 0.5
+  echo "Generate vhost .."
+  sleep 0.5
+  echo "Generate vhost .."
+  sleep 0.5
+  echo "server {
+    listen 80;
+    listen [::]:80;
+    server_name ${vhosturl};
+    access_log /data/wwwlogs/${vhosturl}_nginx.log combined;
+    index index.html index.htm index.php;
+    root /data/wwwroot/${vhosturl};
+
+    include /usr/local/nginx/conf/rewrite/other.conf;
+    #error_page 404 /404.html;
+    #error_page 502 /502.html;
+
+    location ~ [^/]\.php(/|$) {
+      #fastcgi_pass remote_php_ip:9000;
+      fastcgi_pass unix:/dev/shm/php-cgi.sock;
+      fastcgi_index index.php;
+      include fastcgi.conf;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|flv|mp4|ico)$ {
+      expires 30d;
+      access_log off;
+    }
+    location ~ .*\.(js|css)?$ {
+      expires 7d;
+      access_log off;
+    }
+    location ~ /(\.user\.ini|\.ht|\.git|\.svn|\.project|LICENSE|README\.md) {
+      deny all;
+    }
+    location /.well-known {
+      allow all;
+    }
+    include /data/wwwroot/${vhosturl}/nginx-rewrites.txt;
+  }" > /usr/local/nginx/conf/vhost/${vhosturl}.conf
+
+  echo "Vhost Created "
+  DIR="/data/wwwroot/${vhosturl}"
+     if [ ! -d "$DIR" ]; then
+         mkdir $DIR
+         chown www:www  -R $DIR
+         cd $DIR
+          git clone https://github.com/BeepXtra/Steroid-Core4.0.git . -b testnet
+  echo "Setup Cron"
+          sudo crontab -l > cron_bkp
+
+  sudo echo "0 10 * * * sudo /home/test.sh >/dev/null 2>&1" >> cron_bkp
+  sudo crontab cron_bkp
+  sudo rm cron_bkp
+
+     fi
+
+  echo "Enable PHP shell_exec,exec"
+  filename="/usr/local/php/etc/php.ini"
+  $search='disable_functions'
+  $replace=':disable_functions'
+
+  sed -i "s/$search/$replace/" $filename
+  echo "disable_functions = passthru,chroot,chgrp,chown,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,popen" > $filename
+  sudo add-apt-repository ppa:ondrej/php
+  sudo apt-get update
+  sudo apt-get install -y php7.3-gd
+  service php-fpm restart
+
+
+  echo "Check if  file bpc.log exist"
+  DIR="/var/log/bpc.log"
+     if [ ! -f "$DIR" ]; then
+         echo "" > /var/log/bpc.log
+         chown www:www  /var/log/bpc.log
+         echo "bpc.log file created"
+       else
+         echo "bpc.log file exist"
+     fi
+
+     url="${vhosturl}/api"
+     content=$(curl -s "$url" | grep -oP '"info"\s*:\s*"\K([^"]*)' )
+
+
+      a=$content
+      b="Basic API Information"
+      while [[ -z "$check" ]]
+      do
+        content=$(curl -s "$url" | grep -oP '"info"\s*:\s*"\K([^"]*)' )
+
+
+         a=$content
+         b="Basic API Information"
+        if [[ $a == $b ]]
+         then
+           check=0
+            echo "Successfull"
+         else
+             check=''
+            echo "Error"
+      read -s -p "Check again (whait a little ): " check
+
+         fi
+
+      done
+  read -s -p "Please enter your wallet: " wallet
+      DIR="/data/wwwroot/${vhosturl}/strdconfig.php"
+         if [ ! -f "$DIR" ]; then
+             echo "class strdconfig {
+
+      //Database configuration
+      public $db_hostname = 'localhost';
+      public $db_username = 'root';
+      public $db_password = '${dbrootpwd}';
+      public $strd_database = 'S4QL';
+      public $debug = 1;
+      public $root_folder = '';
+      //The time a session should be left alive (In seconds)
+      //This is for security reasons. Users will be automatically logged out after the specified seconds of inactivity
+      public $session_timeout = '10800';
+      //Time settings
+      public $timezone = 'UTC';
+      //Chain configuration
+      public $premine = 500000000;
+      // Maximum number of connected peers
+      public $max_peers = 30;
+      // Enable testnet mode for development
+      public $testnet = false;
+      // To avoid any problems if other clones are made
+      public $coin = 'bpc';
+      // Allow others to connect to the node api (if set to false, only the below 'allowed_hosts' are allowed)
+      public $public_api = true;
+      // Hosts that are allowed to mine on this node
+      public $allowed_hosts = [
+          '127.0.0.1',
+          '139.162.179.250',
+          '139.162.212.101',
+          '172.104.134.29',
+          '62.228.227.198',
+          '*'
+      ];
+      // Disable transactions and block repropagation
+      public $disable_repropagation = true;
+
+      /*
+        |--------------------------------------------------------------------------
+        | Peer Configuration
+        |--------------------------------------------------------------------------
+       */
+      // The number of peers to send each new transaction to
+      public $transaction_propagation_peers = 1;
+      // How many new peers to check from each peer
+      public $max_test_peers = 1;
+      // The initial peers to sync from in sanity
+      public $initial_peer_list = [
+          'https://peer1.steroid.io',
+      ];
+      // does not peer with any of the peers. Uses the seed peers and syncs only from those peers. Requires a cronjob on sanity.php
+      public $passive_peering = false;
+
+      /*
+        |--------------------------------------------------------------------------
+        | Mempool Configuration
+        |--------------------------------------------------------------------------
+       */
+      // The maximum transactions to accept from a single peer
+      public $peer_max_mempool = 100;
+      // The maximum number of mempool transactions to be rebroadcasted
+      public $max_mempool_rebroadcast = 5000;
+      // The number of blocks between rebroadcasting transactions
+      public $sanity_rebroadcast_height = 30;
+      // Block accepting transfers from addresses blacklisted by the Steroid devs
+      public $use_official_blacklist = false;
+
+      /*
+        |--------------------------------------------------------------------------
+        | Sanity Configuration
+        |--------------------------------------------------------------------------
+       */
+      // Recheck the last blocks on sanity
+      public $sanity_recheck_blocks = 10;
+      // The interval to run the sanity in seconds
+      public $sanity_interval = 900;
+      // Enable setting a new hostname (should be used only if you want to change the hostname)
+      public $allow_hostname_change = false;
+      public $hostname = false;
+      // Rebroadcast local transactions when running sanity
+      public $sanity_rebroadcast_locals = true;
+      // Get more peers?
+      public $get_more_peers = false;
+
+      /*
+        |--------------------------------------------------------------------------
+        | Logging Configuration
+        |--------------------------------------------------------------------------
+       */
+      // Enable log output to the specified file
+      public $enable_logging = true;
+      // Log verbosity (default 0, maximum 3)
+      public $log_verbosity = 3;
+
+      /*
+        |--------------------------------------------------------------------------
+        | Masternode Configuration
+        |--------------------------------------------------------------------------
+       */
+      // Enable this node as a masternode
+      public $masternode = true;
+      public $maintenance = false;
+      // The public key for the masternode
+      public $masternode_public_key = '${wallet}';
+
+
+
+      function __construct() {
+          $this->root_folder = dirname(__FILE__);
+
+          if(isset($_SERVER['HTTP_HOST'])){
+              $servername = explode('.', $_SERVER['HTTP_HOST']);
+          } else {
+              $servername = 'localhost';
+          }
+
+          $this->debug_queries = $this->debug;
+
+          // The specified file to write to (this should not be publicly visible)
+          $this->log_file = '/var/log/'.$this->coin.'.log';
+      }
+
+      public function getTld() {
+          //print_r($_SERVER);
+          $tldsrc = strrchr($_SERVER['HTTP_HOST'], ".");
+          $tld = substr($tldsrc, 1);
+          return $tld;
+      }
+
+  }
+  ?>" > $DIR
+             chown www:www  $DIR
+             echo "strdconfig.php file created"
+           else
+             echo "strdconfig.php file exist"
+         fi
+
     echo "${CMSG}Please restart the server and see if the services start up fine.${CEND}"
     read -e -p "Do you want to restart OS ? [y/n]: " reboot_flag
     if [[ ! "${reboot_flag}" =~ ^[y,n]$ ]]; then
