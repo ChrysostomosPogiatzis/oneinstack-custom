@@ -35,7 +35,7 @@ Install_pecl_fileinfo() {
     popd > /dev/null
 
      if [ -f "${phpExtensionDir}/gmp.so" ]; then
-      echo 'extension=fileinfo.so' > ${php_install_dir}/etc/php.d/gmp.ini
+      echo 'extension=gmp.so' > ${php_install_dir}/etc/php.d/gmp.ini
       echo "${CSUCCESS}PHP gmp module installed successfully! ${CEND}"
      
     else
@@ -50,22 +50,22 @@ Install_pecl_fileinfo() {
     popd > /dev/null
 
      if [ -f "${phpExtensionDir}/bcmath.so" ]; then
-      echo 'extension=bcmath.so' > ${php_install_dir}/etc/php.d/gmp.ini
+      echo 'extension=bcmath.so' > ${php_install_dir}/etc/php.d/bcmath.ini
       echo "${CSUCCESS}PHP bcmath module installed successfully! ${CEND}"
        
     else
       echo "${CFAILURE}PHP bcmath module install failed, Please contact the author! ${CEND}" && lsb_release -a
     fi
     
-         pushd php-${PHP_detail_ver}/ext/PDO > /dev/null
+         pushd php-${PHP_detail_ver}/ext/pdo > /dev/null
     ${php_install_dir}/bin/phpize
     ./configure --with-php-config=${php_install_dir}/bin/php-config
     [[ "${php_option}" =~ ^1[0-1]$ ]] && sed -i 's@^CFLAGS = -g -O2@CFLAGS = -std=c99 -g -O2@' Makefile
     make -j ${THREAD} && make install
     popd > /dev/null
 
-     if [ -f "${phpExtensionDir}/PDO.so" ]; then
-      echo 'extension=PDO.so' > ${php_install_dir}/etc/php.d/gmp.ini
+     if [ -f "${phpExtensionDir}/pdo.so" ]; then
+      echo 'extension=pdo.so' > ${php_install_dir}/etc/php.d/pdo.ini
       echo "${CSUCCESS}PHP PDO module installed successfully! ${CEND}"
       
     else
