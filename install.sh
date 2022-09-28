@@ -1002,7 +1002,7 @@ sudo bash -c "echo 'server {
     index index.html index.htm index.php;
     root /data/wwwroot/${vhosturl};
 
-    include /usr/local/nginx/conf/rewrite/other.conf;
+    #include /usr/local/nginx/conf/rewrite/other.conf;
     #error_page 404 /404.html;
     #error_page 502 /502.html;
 
