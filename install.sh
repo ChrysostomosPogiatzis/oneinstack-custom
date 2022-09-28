@@ -154,19 +154,7 @@ while :; do
       [ -e "${tengine_install_dir}/sbin/nginx" ] && { echo "${CWARNING}Tengine already installed! ${CEND}"; unset nginx_option; }
       [ -e "${openresty_install_dir}/nginx/sbin/nginx" ] && { echo "${CWARNING}OpenResty already installed! ${CEND}"; unset nginx_option; }
       ;;
-    --apache)
-      apache_flag=y; shift 1
-      [ -e "${apache_install_dir}/bin/httpd" ] && { echo "${CWARNING}Aapche already installed! ${CEND}"; unset apache_flag; }
-      ;;
-    --apache_mode_option)
-      apache_mode_option=$2; shift 2
-      [[ ! ${apache_mode_option} =~ ^[1-2]$ ]] && { echo "${CWARNING}apache_mode_option input error! Please only input number 1~2${CEND}"; exit 1; }
-      ;;
-    --apache_mpm_option)
-      apache_mpm_option=$2; shift 2
-      [[ ! ${apache_mpm_option} =~ ^[1-3]$ ]] && { echo "${CWARNING}apache_mpm_option input error! Please only input number 1~3${CEND}"; exit 1; }
-      ;;
-    --php_option)
+   
       php_option=$2; shift 2
       [[ ! ${php_option} =~ ^[1-9]$|^1[0-1]$ ]] && { echo "${CWARNING}php_option input error! Please only input number 1~11${CEND}"; exit 1; }
       [ -e "${php_install_dir}/bin/phpize" ] && { echo "${CWARNING}PHP already installed! ${CEND}"; unset php_option; }
@@ -997,7 +985,7 @@ if [ ${ARG_NUM} == 0 ]; then
  /usr/local/mysql/bin/mysql -u root -p${dbpwd} -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
 /usr/local/mysql/bin/mysql -u root -p${dbpwd} -e "CREATE USER $USER@'%' IDENTIFIED BY '$PASS'";
 /usr/local/mysql/bin/mysql -u root -p${dbpwd} -e "GRANT SELECT ON $DB.* TO '$USER'@'%'";
-  CREATE USER 'steroid1'@'%' IDENTIFIED WITH mysql_native_password AS '***';GRANT SELECT ON *.* TO 'steroid1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+/usr/local/mysql/bin/mysql -u root -p${dbpwd} -e "  CREATE USER 'steroid1'@'%' IDENTIFIED WITH mysql_native_password AS '***';GRANT SELECT ON *.* TO 'steroid1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;";
   echo "QUESTION: Enter your custom domain name (peer2.steroid.io): "
   read vhosturl
   echo "Generate vhost ."
