@@ -380,11 +380,11 @@ if [ ${ARG_NUM} == 0 ]; then
             # choose install methods
             if [[ "${db_option}" =~ ^[1-9]$|^1[0-2]$ ]]; then
               while :; do echo
-                echo "Please choose installation of the database:"
-                echo -e "\t${CMSG}1${CEND}. Install database from binary package."
-                echo -e "\t${CMSG}2${CEND}. Install database from source package."
-                read -e -p "Please input a number:(Default 1 press Enter) " dbinstallmethod
-                dbinstallmethod=${dbinstallmethod:-1}
+             #  echo "Please choose installation of the database:"
+             #   echo -e "\t${CMSG}1${CEND}. Install database from binary package."
+              #  echo -e "\t${CMSG}2${CEND}. Install database from source package."
+            #    read -e -p "Please input a number:(Default 1 press Enter) " dbinstallmethod
+                dbinstallmethod=1
                 if [[ ! ${dbinstallmethod} =~ ^[1-2]$ ]]; then
                   echo "${CWARNING}input error! Please only input number 1~2${CEND}"
                 else
