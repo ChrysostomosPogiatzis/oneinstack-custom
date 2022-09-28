@@ -993,7 +993,8 @@ if [ ${ARG_NUM} == 0 ]; then
   sleep 0.5
   echo "Generate vhost .."
   sleep 0.5
-  echo "server {
+sudo bash -c "echo 'server {
+
     listen 80;
     listen [::]:80;
     server_name ${vhosturl};
@@ -1027,7 +1028,7 @@ if [ ${ARG_NUM} == 0 ]; then
       allow all;
     }
     include /data/wwwroot/${vhosturl}/nginx-rewrites.txt;
-  }" > /usr/local/nginx/conf/vhost/${vhosturl}.conf
+  }' > /usr/local/nginx/conf/vhost/${vhosturl}.conf"
 
   echo "Vhost Created "
   DIR="/data/wwwroot/${vhosturl}"
