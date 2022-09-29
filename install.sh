@@ -154,7 +154,19 @@ while :; do
       [ -e "${tengine_install_dir}/sbin/nginx" ] && { echo "${CWARNING}Tengine already installed! ${CEND}"; unset nginx_option; }
       [ -e "${openresty_install_dir}/nginx/sbin/nginx" ] && { echo "${CWARNING}OpenResty already installed! ${CEND}"; unset nginx_option; }
       ;;
-   
+    --apache)
+      apache_flag=y; shift 1
+      [ -e "${apache_install_dir}/bin/httpd" ] && { echo "${CWARNING}Aapche already installed! ${CEND}"; unset apache_flag; }
+      ;;
+    --apache_mode_option)
+      apache_mode_option=$2; shift 2
+      [[ ! ${apache_mode_option} =~ ^[1-2]$ ]] && { echo "${CWARNING}apache_mode_option input error! Please only input number 1~2${CEND}"; exit 1; }
+      ;;
+    --apache_mpm_option)
+      apache_mpm_option=$2; shift 2
+      [[ ! ${apache_mpm_option} =~ ^[1-3]$ ]] && { echo "${CWARNING}apache_mpm_option input error! Please only input number 1~3${CEND}"; exit 1; }
+      ;;
+    --php_option)
       php_option=$2; shift 2
       [[ ! ${php_option} =~ ^[1-9]$|^1[0-1]$ ]] && { echo "${CWARNING}php_option input error! Please only input number 1~11${CEND}"; exit 1; }
       [ -e "${php_install_dir}/bin/phpize" ] && { echo "${CWARNING}PHP already installed! ${CEND}"; unset php_option; }
