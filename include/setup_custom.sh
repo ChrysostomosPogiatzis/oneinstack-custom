@@ -1,7 +1,7 @@
 #!/bin/bash
 # Steroid Installation
 # Intro
-
+dbpass=demo1
 #wget -c http://mirrors.linuxeye.com/oneinstack-full.tar.gz && tar xzf oneinstack-full.tar.gz && ./oneinstack/install.sh --nginx_option 1 --php_option 8 --phpcache_option 1 --php_extensions ioncube,imagick,fileinfo,memcached,memcache --phpmyadmin  --db_option 2 --dbinstallmethod 1 --dbrootpwd $dbpass --pureftpd  --memcached  --iptables  --ssh_port 2211 --reboot
 echo "Create Steroid Database"
 DB="S4QL"
@@ -19,42 +19,40 @@ echo "Generate vhost .."
 sleep 0.5
 echo "Generate vhost .."
 sleep 0.5
-echo "server {
-  listen 80;
-  listen [::]:80;
-  server_name ${vhosturl};
-  access_log /data/wwwlogs/${vhosturl}_nginx.log combined;
-  index index.html index.htm index.php;
-  root /data/wwwroot/${vhosturl};
-
-  include /usr/local/nginx/conf/rewrite/other.conf;
-  #error_page 404 /404.html;
-  #error_page 502 /502.html;
-
-  location ~ [^/]\.php(/|$) {
-    #fastcgi_pass remote_php_ip:9000;
-    fastcgi_pass unix:/dev/shm/php-cgi.sock;
-    fastcgi_index index.php;
-    include fastcgi.conf;
-  }
-
-  location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|flv|mp4|ico)$ {
-    expires 30d;
-    access_log off;
-  }
-  location ~ .*\.(js|css)?$ {
-    expires 7d;
-    access_log off;
-  }
-  location ~ /(\.user\.ini|\.ht|\.git|\.svn|\.project|LICENSE|README\.md) {
-    deny all;
-  }
-  location /.well-known {
-    allow all;
-  }
-  include /data/wwwroot/${vhosturl}/nginx-rewrites.txt;
-}" > /usr/local/nginx/conf/vhost/${vhosturl}.conf
-
+sudo bash -c "echo 'server {
+    listen 80;
+    listen [::]:80;
+    server_name ${vhosturl};
+    access_log /data/wwwlogs/${vhosturl}_nginx.log combined;
+    index index.html index.htm index.php;
+    root /data/wwwroot/${vhosturl};
+    #include /usr/local/nginx/conf/rewrite/other.conf;
+    #error_page 404 /404.html;
+    #error_page 502 /502.html;
+    location ~ [^/]\.php(/|$) {
+      #fastcgi_pass remote_php_ip:9000;
+      fastcgi_pass unix:/dev/shm/php-cgi.sock;
+      fastcgi_index index.php;
+      include fastcgi.conf;
+    }
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|flv|mp4|ico)$ {
+      expires 30d;
+      access_log off;
+    }
+    location ~ .*\.(js|css)?$ {
+      expires 7d;
+      access_log off;
+    }
+    location ~ /(\.user\.ini|\.ht|\.git|\.svn|\.project|LICENSE|README\.md) {
+      deny all;
+    }
+    location /.well-known {
+      allow all;
+    }
+    include /data/wwwroot/${vhosturl}/nginx-rewrites.txt;
+  }' > /usr/local/nginx/conf/vhost/${vhosturl}.conf"
+  
+  
 echo "Vhost Created "
 DIR="/data/wwwroot/${vhosturl}"
    if [ ! -d "$DIR" ]; then
