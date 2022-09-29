@@ -1049,10 +1049,10 @@ sudo bash -c "echo 'server {
   echo "Enable PHP shell_exec,exec"
   filename="/usr/local/php/etc/php.ini"
   $search='disable_functions'
-  $replace=':disable_functions'
+  $replace=';disable_functions'
 
   sed -i "s/$search/$replace/" $filename
-  echo "disable_functions = passthru,chroot,chgrp,chown,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,popen" > $filename
+  echo "disable_functions = passthru,chroot,chgrp,chown,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,popen" >> filename
   sudo add-apt-repository ppa:ondrej/php
   sudo apt-get update
   sudo apt-get install -y php7.3-gd
@@ -1069,31 +1069,6 @@ sudo bash -c "echo 'server {
          echo "bpc.log file exist"
      fi
 
-     url="${vhosturl}/api"
-     content=$(curl -s "$url" | grep -oP '"info"\s*:\s*"\K([^"]*)' )
-
-
-      a=$content
-      b="Basic API Information"
-      while [[ -z "$check" ]]
-      do
-        content=$(curl -s "$url" | grep -oP '"info"\s*:\s*"\K([^"]*)' )
-
-
-         a=$content
-         b="Basic API Information"
-        if [[ $a == $b ]]
-         then
-           check=0
-            echo "Successfull"
-         else
-             check=''
-            echo "Error"123
-      read -s -p "Check again (whait a little ): " check
-
-         fi
-
-      done
   read -s -p "Please enter your wallet: " wallet
       DIR="/data/wwwroot/${vhosturl}/strdconfig.php"
          if [ ! -f "$DIR" ]; then
