@@ -19,7 +19,9 @@ echo "Generate vhost .."
 sleep 0.5
 echo "Generate vhost .."
 sleep 0.5
-sudo mkdir /usr/local/nginx/conf/vhost
+  if [ ! -d "/usr/local/nginx/conf/vhost" ]; then
+       sudo mkdir /usr/local/nginx/conf/vhost
+  fi
 sudo bash -c "echo 'server {
     listen 80;
     listen [::]:80;
