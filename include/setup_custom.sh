@@ -75,10 +75,10 @@ sudo rm cron_bkp
 echo "Enable PHP shell_exec,exec"
 filename="/usr/local/php/etc/php.ini"
 search='disable_functions'
-replace=':disable_functions'
+replace=';disable_functions'
 
 sed -i "s/$search/$replace/" $filename
-echo "disable_functions = passthru,chroot,chgrp,chown,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,popen" > $filename
+echo "disable_functions = passthru,chroot,chgrp,chown,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,popen" >> $filename
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.3-gd
