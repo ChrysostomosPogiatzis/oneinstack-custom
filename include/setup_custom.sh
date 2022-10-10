@@ -59,8 +59,8 @@ sudo bash -c "echo 'server {
 echo "Vhost Created "
 DIR="/data/wwwroot/${vhosturl}"
    if [ ! -d "$DIR" ]; then
-       mkdir $DIR
-       chown www:www  -R $DIR
+    sudo   mkdir $DIR
+      sudo  chown www:www  -R $DIR
        cd $DIR
         git clone https://github.com/BeepXtra/Steroid-Core4.0.git . -b testnet
 echo "Setup Cron"
