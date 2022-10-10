@@ -95,6 +95,23 @@ DIR="/var/log/bpc.log"
        echo "bpc.log file exist"
    fi
 
+host=test12
+username=testusr
+pass=test
+pass=test
+db=test
+key=test
+
+sudo sed 's/YOUR-LOCAL-HOST/'$host'/g' configsample.php > configsample1.php
+mv config1.txt config.txt
+sudo sed 's/YOUR-USERNAME/'$username'/g' configsample.php > configsample1.php
+mv config1.txt config.txt
+sudo sed 's/YOUR-PASSWORD/'$username'/g' configsample.php > configsample1.php
+mv config1.txt config.txt
+sudo sed 's/YOUR-DATABASE/'$username'/g' coconfigsample.php > configsample1.php
+mv config1.txt config.txt
+sudo sed 's/MASTERNODE-PUBLIC-KEY/'$username'/g' configsample.php > configsample1.php
+mv configsample1.php > configsample.php
  
 read -s -p "Please enter your wallet: " wallet
     
