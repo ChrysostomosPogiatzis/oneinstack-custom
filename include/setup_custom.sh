@@ -7,9 +7,9 @@ echo "Create Steroid Database"
 DB="S4QL"
 USER="steroid"
 PASS="steroid"
-mysql -u root -p${dbpass} -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
-mysql -u root -p${dbpass} -e "CREATE USER $USER@'%' IDENTIFIED BY '$PASS'";
-mysql -u root -p${dbpass} -e "GRANT SELECT ON $DB.* TO '$USER'@'%'";
+/usr/local/mysql/bin/mysql -u root -p${dbpass} -e "CREATE DATABASE $DB CHARACTER SET utf8 COLLATE utf8_general_ci";
+/usr/local/mysql/bin/mysql -u root -p${dbpass} -e "CREATE USER $USER@'%' IDENTIFIED BY '$PASS'";
+/usr/local/mysql/bin/mysql -u root -p${dbpass} -e "GRANT SELECT ON $DB.* TO '$USER'@'%'";
 #CREATE USER 'steroid1'@'%' IDENTIFIED WITH mysql_native_password AS '***';GRANT SELECT ON *.* TO 'steroid1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
 echo "QUESTION: Enter your custom domain name (peer2.steroid.io): "
 read vhosturl
