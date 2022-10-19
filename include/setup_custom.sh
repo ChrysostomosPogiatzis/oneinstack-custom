@@ -108,7 +108,7 @@ sudo sed 's/YOUR-USERNAME/'$username'/g' configsample.php > configsample1.php
 mv configsample1.php configsample.php
 sudo sed 's/YOUR-PASSWORD/'$pass'/g' configsample.php > configsample1.php
 mv configsample1.php configsample.php
-sudo sed 's/YOUR-DATABASE/'$db'/g' coconfigsample.php > configsample1.php
+sudo sed 's/YOUR-DATABASE/'$db'/g' configsample.php > configsample1.php
 mv configsample1.php configsample.php
 sudo sed 's/MASTERNODE-PUBLIC-KEY/'$key'/g' configsample.php > configsample1.php
 mv configsample1.php > configsample.php
