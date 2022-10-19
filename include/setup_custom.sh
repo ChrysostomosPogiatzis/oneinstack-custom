@@ -27,6 +27,7 @@ sudo bash -c "echo 'server {
     listen [::]:80;
     server_name ${vhosturl};
     access_log /data/wwwlogs/${vhosturl}_nginx.log combined;
+    error_log /data/wwwlogs/${vhosturl}_error.log warn;
     index index.html index.htm index.php;
     root /data/wwwroot/${vhosturl};
     #include /usr/local/nginx/conf/rewrite/other.conf;
