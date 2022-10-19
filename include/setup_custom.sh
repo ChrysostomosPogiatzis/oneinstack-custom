@@ -95,11 +95,10 @@ DIR="/var/log/bpc.log"
        echo "bpc.log file exist"
    fi
 
-host=test12
-username=testusr
-pass=test
-pass=test
-db=test
+host=localhost
+username=root
+pass=$dbpass
+db=S4QL
 key=test
 
 sudo sed 's/YOUR-LOCAL-HOST/'$host'/g' configsample.php > configsample1.php
@@ -116,6 +115,6 @@ echo "db added"
 mv configsample1.php configsample.php
 sudo sed 's/MASTERNODE-PUBLIC-KEY/'$key'/g' configsample.php > configsample1.php
 echo "key added"
-mv configsample1.php  strdconfig.php.php
+mv configsample1.php  strdconfig.php
 service nginx  restart
     
