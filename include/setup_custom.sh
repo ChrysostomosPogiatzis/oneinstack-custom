@@ -103,14 +103,19 @@ db=test
 key=test
 
 sudo sed 's/YOUR-LOCAL-HOST/'$host'/g' configsample.php > configsample1.php
+echo "host added"
 mv configsample1.php configsample.php
 sudo sed 's/YOUR-USERNAME/'$username'/g' configsample.php > configsample1.php
+echo "user added"
 mv configsample1.php configsample.php
 sudo sed 's/YOUR-PASSWORD/'$pass'/g' configsample.php > configsample1.php
+echo "pass added"
 mv configsample1.php configsample.php
 sudo sed 's/YOUR-DATABASE/'$db'/g' configsample.php > configsample1.php
+echo "db added"
 mv configsample1.php configsample.php
 sudo sed 's/MASTERNODE-PUBLIC-KEY/'$key'/g' configsample.php > configsample1.php
+echo "key added"
 mv configsample1.php > configsample.php
 read -s -p "Please enter your wallet: " wallet
     
