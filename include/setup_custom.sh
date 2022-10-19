@@ -116,6 +116,6 @@ echo "db added"
 mv configsample1.php configsample.php
 sudo sed 's/MASTERNODE-PUBLIC-KEY/'$key'/g' configsample.php > configsample1.php
 echo "key added"
-mv configsample1.php > configsample.php
+mv configsample1.php  configsample.php
 
     
