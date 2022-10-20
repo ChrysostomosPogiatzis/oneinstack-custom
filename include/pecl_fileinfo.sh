@@ -25,7 +25,7 @@ Install_pecl_fileinfo() {
       echo 'extension=fileinfo.so' > ${php_install_dir}/etc/php.d/04-fileinfo.ini
       echo "${CSUCCESS}PHP fileinfo module installed successfully! ${CEND}"
        
-       
+      fi  
        
         pushd php-${PHP_detail_ver}/ext/gmp > /dev/null
     ${php_install_dir}/bin/phpize
