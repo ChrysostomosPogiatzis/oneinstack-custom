@@ -10,6 +10,35 @@
 
 Install_pecl_fileinfo() {
   if [ -e "${php_install_dir}/bin/phpize" ]; then
+    sudo apt-get install libgmp3-dev
+
+
+    pushd ${oneinstack_dir}/src > /dev/null
+    phpExtensionDir=$(${php_install_dir}/bin/php-config --extension-dir)
+    PHP_detail_ver=$(${php_install_dir}/bin/php-config --version)
+    src_url=https://secure.php.net/distributions/php-${PHP_detail_ver}.tar.gz && Download_src
+    tar xzf php-${PHP_detail_ver}.tar.gz
+
+
+#pdo_install
+    pushd php-${PHP_detail_ver}/ext/gmp > /dev/null
+    ${php_install_dir}/bin/phpize
+    ./configure --with-php-config=${php_install_dir}/bin/php-config
+    [[ "${php_option}" =~ ^1[0-1]$ ]] && sed -i 's@^CFLAGS = -g -O2@CFLAGS = -std=c99 -g -O2@' Makefile
+    make  && make install
+    popd > /dev/null
+    if [ -f "${phpExtensionDir}/gmp.so" ]; then
+      echo 'extension=gmp.so' > ${php_install_dir}/etc/php.d/04-gmp.ini
+      echo "${CFAILURE}PHP gmp module installed successfully! ${CEND}"
+      rm -rf php-${PHP_detail_ver}
+    else
+      echo "${CFAILURE}PHP gmp module install failed, Please contact the author! ${CEND}" && lsb_release -a
+    fi
+    popd > /dev/null
+
+  fi
+
+  if [ -e "${php_install_dir}/bin/phpize" ]; then
     pushd ${oneinstack_dir}/src > /dev/null
     phpExtensionDir=$(${php_install_dir}/bin/php-config --extension-dir)
     PHP_detail_ver=$(${php_install_dir}/bin/php-config --version)
@@ -26,13 +55,25 @@ Install_pecl_fileinfo() {
     popd > /dev/null
     if [ -f "${phpExtensionDir}/fileinfo.so" ]; then
       echo 'extension=fileinfo.so' > ${php_install_dir}/etc/php.d/04-fileinfo.ini
-      echo "${CSUCCESS}PHP fileinfo module installed successfully! ${CEND}"
-  
+      echo "${CFAILURE}PHP fileinfo module installed successfully! ${CEND}"
+      rm -rf php-${PHP_detail_ver}
     else
       echo "${CFAILURE}PHP fileinfo module install failed, Please contact the author! ${CEND}" && lsb_release -a
     fi
     popd > /dev/null
 
+  fi
+
+
+  if [ -e "${php_install_dir}/bin/phpize" ]; then
+    pushd ${oneinstack_dir}/src > /dev/null
+    phpExtensionDir=$(${php_install_dir}/bin/php-config --extension-dir)
+    PHP_detail_ver=$(${php_install_dir}/bin/php-config --version)
+    src_url=https://secure.php.net/distributions/php-${PHP_detail_ver}.tar.gz && Download_src
+    tar xzf php-${PHP_detail_ver}.tar.gz
+
+
+#pdo_install
     pushd php-${PHP_detail_ver}/ext/gmp > /dev/null
     ${php_install_dir}/bin/phpize
     ./configure --with-php-config=${php_install_dir}/bin/php-config
@@ -41,13 +82,26 @@ Install_pecl_fileinfo() {
     popd > /dev/null
     if [ -f "${phpExtensionDir}/gmp.so" ]; then
       echo 'extension=gmp.so' > ${php_install_dir}/etc/php.d/04-gmp.ini
-      echo "${CSUCCESS}PHP gmp module installed successfully! ${CEND}"
-
+      echo "${CFAILURE}PHP gmp module installed successfully! ${CEND}"
+      rm -rf php-${PHP_detail_ver}
     else
       echo "${CFAILURE}PHP gmp module install failed, Please contact the author! ${CEND}" && lsb_release -a
     fi
     popd > /dev/null
 
+  fi
+
+
+
+  if [ -e "${php_install_dir}/bin/phpize" ]; then
+    pushd ${oneinstack_dir}/src > /dev/null
+    phpExtensionDir=$(${php_install_dir}/bin/php-config --extension-dir)
+    PHP_detail_ver=$(${php_install_dir}/bin/php-config --version)
+    src_url=https://secure.php.net/distributions/php-${PHP_detail_ver}.tar.gz && Download_src
+    tar xzf php-${PHP_detail_ver}.tar.gz
+
+
+#pdo_install
     pushd php-${PHP_detail_ver}/ext/bcmath > /dev/null
     ${php_install_dir}/bin/phpize
     ./configure --with-php-config=${php_install_dir}/bin/php-config
@@ -56,15 +110,24 @@ Install_pecl_fileinfo() {
     popd > /dev/null
     if [ -f "${phpExtensionDir}/bcmath.so" ]; then
       echo 'extension=bcmath.so' > ${php_install_dir}/etc/php.d/04-bcmath.ini
-      echo "${CSUCCESS}PHP bcmath module installed successfully! ${CEND}"
-
+      echo "${CFAILURE}PHP bcmath module installed successfully! ${CEND}"
+      rm -rf php-${PHP_detail_ver}
     else
       echo "${CFAILURE}PHP bcmath module install failed, Please contact the author! ${CEND}" && lsb_release -a
     fi
     popd > /dev/null
 
+  fi
+
+  if [ -e "${php_install_dir}/bin/phpize" ]; then
+    pushd ${oneinstack_dir}/src > /dev/null
+    phpExtensionDir=$(${php_install_dir}/bin/php-config --extension-dir)
+    PHP_detail_ver=$(${php_install_dir}/bin/php-config --version)
+    src_url=https://secure.php.net/distributions/php-${PHP_detail_ver}.tar.gz && Download_src
+    tar xzf php-${PHP_detail_ver}.tar.gz
 
 
+#pdo_install
     pushd php-${PHP_detail_ver}/ext/pdo > /dev/null
     ${php_install_dir}/bin/phpize
     ./configure --with-php-config=${php_install_dir}/bin/php-config
@@ -73,14 +136,13 @@ Install_pecl_fileinfo() {
     popd > /dev/null
     if [ -f "${phpExtensionDir}/pdo.so" ]; then
       echo 'extension=pdo.so' > ${php_install_dir}/etc/php.d/04-pdo.ini
-      echo "${CSUCCESS}PHP pdo module installed successfully! ${CEND}"
-
+      echo "${CFAILURE}PHP pdo module installed successfully! ${CEND}"
+      rm -rf php-${PHP_detail_ver}
     else
       echo "${CFAILURE}PHP pdo module install failed, Please contact the author! ${CEND}" && lsb_release -a
     fi
     popd > /dev/null
 
-    rm -rf php-${PHP_detail_ver}
   fi
 }
 
